@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<ul th:each="word : ${english_words}">
+    <li> <a th:href="'/english/view/' + ${word.id}" th:text="${word.word}"></a> </li>
+</ul>
+
+<nav>
+    <a href="/english/add">Add Word</a><br/>
+    <a href="/english/remove">Remove Word</a>
+</nav>
+
+</body>
+</html>

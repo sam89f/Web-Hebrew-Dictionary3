@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<form method="post" style="max-width:600px;">
+    <div class="form-group">
+        <input type="text" name="newHebrew" />
+    </div>
+    <input type="submit" value="Search Word" />
+</form>
+
+
+<p th:if="${resultW}">
+<table class="table">
+
+    <tr>
+        <th>Word</th>
+        <th>Description</th>
+    </tr>
+
+    <tr>
+        <td th:text="${resultW}"></td>
+        <td th:text="${resultD}"></td>
+    </tr>
+
+</table>
+</p>
+<nav>
+    <a href="/hebrew/add">Add</a> |
+    <a href="/hebrew/remove">Remove</a>
+</nav>
+
+</body>
+</html>

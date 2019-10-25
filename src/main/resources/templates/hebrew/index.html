@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+
+<body class="container">
+
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<p th:unless="${hebrew_words} and ${hebrew_words.size()}">no words :(</p>
+
+
+<table class="table">
+
+    <tr>
+        <th>Word</th>
+        <th>Description</th>
+    </tr>
+
+    <tr th:each="word : ${hebrew_words}">
+        <td th:text="${word.word}"></td>
+        <td th:text="${word.description}"></td>
+    </tr>
+
+</table>
+
+<nav>
+    <a href="/hebrew/add">Add</a> |
+    <a href="/hebrew/remove">Remove</a> |
+    <a href="/hebrew/search">Search</a>
+</nav>
+
+</body>
+</html>

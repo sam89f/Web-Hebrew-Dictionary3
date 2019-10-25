@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<form method="post" style="max-width:600px;" th:object="${form}" action="/english/remove-item">
+
+    <div class="form-group">
+        <label th:for="hebrewId">Hebrew</label>
+        <select name="hebrewId">
+            <option th:each="word : ${word_list}"
+                    th:text="${word.word}"
+                    th:value="${word.id}"></option>
+        </select>
+    </div>
+
+    <input type="hidden" name="englishId" th:value="*{english.id}" />
+
+    <input type="submit" value="Remove Item" />
+</form>
+
+</body>
+</html>

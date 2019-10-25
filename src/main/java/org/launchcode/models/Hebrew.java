@@ -3,14 +3,16 @@ package org.launchcode.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * Created by LaunchCode
  */
 @Entity
-public class Cheese {
+public class Hebrew {
 
     @Id
     @GeneratedValue
@@ -18,31 +20,32 @@ public class Cheese {
 
     @NotNull
     @Size(min=3, max=15)
-    private String name;
+    private String word;
 
     @NotNull
     @Size(min=1, message = "Description must not be empty")
     private String description;
 
-    private CheeseType type;
+    @ManyToMany(mappedBy = "hebrew_words")
+    private List<English> english_words;
 
-    public Cheese(String name, String description) {
-        this.name = name;
+    public Hebrew(String word, String description) {
+        this.word = word;
         this.description = description;
     }
 
-    public Cheese() { }
+    public Hebrew() { }
 
     public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getWord() {
+        return word;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setWord(String word) {
+        this.word = word;
     }
 
     public String getDescription() {
@@ -53,11 +56,8 @@ public class Cheese {
         this.description = description;
     }
 
-    public CheeseType getType() {
-        return type;
-    }
-
-    public void setType(CheeseType type) {
-        this.type = type;
+    public void addItem(English item)
+    {
+        english_words.add(item);
     }
 }
