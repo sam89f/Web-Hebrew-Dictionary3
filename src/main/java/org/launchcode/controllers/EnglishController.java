@@ -42,7 +42,6 @@ public class EnglishController
 
         return "english/add";
     }
-
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String add(Model model, @ModelAttribute @Valid English english,
                       Errors errors) {
@@ -55,13 +54,13 @@ public class EnglishController
         englishDao.save(english);
         return "redirect:view/" + english.getId();
     }
+
     @RequestMapping(value = "remove", method = RequestMethod.GET)
     public String displayRemoveEnglishForm(Model model) {
         model.addAttribute("english_words", englishDao.findAll());
         model.addAttribute("title", "Remove Word");
         return "english/remove";
     }
-
     @RequestMapping(value = "remove", method = RequestMethod.POST)
     public String processRemoveEnglishForm(@RequestParam int[] englishIds) {
 
@@ -71,6 +70,34 @@ public class EnglishController
 
         return "redirect:";
     }
+
+    @RequestMapping(value = "search", method = RequestMethod.GET)
+    public String displaySearchForm(Model model) {
+        model.addAttribute("title", "Search Word");
+
+
+        return "english/search";
+    }
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public String processSearchForm(Model model, @RequestParam String newEnglish) {
+
+        model.addAttribute("title", "Search Word");
+        model.addAttribute("last", "newEnglish");
+        System.out.println("*****" + newEnglish + "******");
+
+        for(English w : englishDao.findAll())
+        {
+            if(newEnglish.equals(w.getWord()))
+            {
+                System.out.println("*****" + w.getWord() + "******");
+                model.addAttribute("result", w);
+                break;
+            }
+        }
+
+        return "english/search";
+    }
+
     @RequestMapping(value = "view/{englishId}", method = RequestMethod.GET)
     public String viewEnglish(Model model, @PathVariable int englishId)
     {
@@ -94,7 +121,6 @@ public class EnglishController
 
         return "english/add-item";
     }
-
     @RequestMapping(value = "add-item", method = RequestMethod.POST)
     public String addItem(Model model, @ModelAttribute @Valid AddEnglishItemForm form, Errors errors)
     {
@@ -133,7 +159,6 @@ public class EnglishController
 
         return "english/remove-item";
     }
-
     @RequestMapping(value = "remove-item", method = RequestMethod.POST)
     public String processRemoveItem(Model model, @ModelAttribute @Valid AddEnglishItemForm form, Errors errors)
     {

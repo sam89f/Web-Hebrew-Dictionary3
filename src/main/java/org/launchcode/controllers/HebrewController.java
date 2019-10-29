@@ -70,14 +70,14 @@ public class HebrewController {
     }
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
-    public String displayAddSearchForm(Model model) {
+    public String displaySearchForm(Model model) {
         model.addAttribute("title", "Search Word");
 
 
         return "hebrew/search";
     }
     @RequestMapping(value = "search", method = RequestMethod.POST)
-    public String processSearchHebrewForm(Model model, @RequestParam String newHebrew) {
+    public String processSearchForm(Model model, @RequestParam String newHebrew) {
 
         model.addAttribute("title", "Search Word");
         model.addAttribute("last", "newHebrew");

@@ -8,30 +8,20 @@
 
 <form method="post" style="max-width:600px;">
     <div class="form-group">
-        <input type="text" name="newHebrew" />
+        <input type="text" name="newEnglish" />
     </div>
     <input type="submit" value="Search Word" />
 </form>
 
 
-<p th:if="${resultW}">
-<table class="table">
-
-    <tr>
-        <th>Word</th>
-        <th>Description</th>
-    </tr>
-
-    <tr>
-        <td th:text="${resultW}"></td>
-        <td th:text="${resultD}"></td>
-    </tr>
-
-</table>
+<p th:if="${result}">
+<ul>
+    <li> <a th:href="'/english/view/' + ${result.id}" th:text="${result.word}"></a> </li>
+</ul>
 </p>
 <nav>
-    <a href="/hebrew/add">Add Word</a> |
-    <a href="/hebrew/remove">Remove Word</a>
+    <a href="/english/add">Add Word</a> |
+    <a href="/english/remove">Remove Word</a>
 </nav>
 
 </body>
