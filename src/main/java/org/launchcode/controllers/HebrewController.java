@@ -1,15 +1,16 @@
 package org.launchcode.controllers;
 
+import org.launchcode.models.English;
 import org.launchcode.models.Hebrew;
+import org.launchcode.models.data.EnglishDao;
 import org.launchcode.models.data.HebrewDao;
+import org.launchcode.models.forms.AddEnglishItemForm;
+import org.launchcode.models.forms.AddHebrewItemForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,9 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("hebrew")
 public class HebrewController {
+
+    @Autowired
+    private EnglishDao englishDao;
 
     @Autowired
     private HebrewDao hebrewDao;
@@ -62,7 +66,16 @@ public class HebrewController {
     @RequestMapping(value = "remove", method = RequestMethod.POST)
     public String processRemoveHebrewForm(@RequestParam int[] hebrewIds) {
 
-        for (int hebrewId : hebrewIds) {
+        for (int hebrewId : hebrewIds)
+        {
+            Hebrew w = hebrewDao.findOne(hebrewId);
+            if(w.getEnglish_words().size() > 0)
+            {
+                for(English x: w.getEnglish_words())
+                {
+                    x.RemoveItem(w);
+                }
+            }
             hebrewDao.delete(hebrewId);
         }
 
@@ -89,9 +102,13 @@ public class HebrewController {
             {
                 System.out.println("*****" + w.getWord() + "******");
                 model.addAttribute("resultW", w.getWord());
+                model.addAttribute("resultID", w.getId());
                 model.addAttribute("resultD", w.getDescription());
-
-                //System.out.println("*****" + result.getWord() + result + "******");
+                System.out.println("-english words:-");
+                for(English x : w.getEnglish_words())
+                {
+                    System.out.println("-----" + x.getWord() + "-----");
+                }
                 break;
             }
         }
@@ -99,4 +116,92 @@ public class HebrewController {
         return "hebrew/search";
     }
 
+    @RequestMapping(value = "view/{hebrewId}", method = RequestMethod.GET)
+    public String viewHebrew(Model model, @PathVariable int hebrewId)
+    {
+        Hebrew hebrew = hebrewDao.findOne(hebrewId);
+        model.addAttribute("title", hebrew.getWord());
+        model.addAttribute("hebrew", hebrew);
+
+        return "hebrew/view";
+    }
+
+    @RequestMapping(value = "edit/{hebrewId}", method = RequestMethod.GET)
+    public String editHebrew(Model model, @PathVariable int hebrewId)
+    {
+        Hebrew hebrew = hebrewDao.findOne(hebrewId);
+
+        model.addAttribute("title", hebrew.getWord());
+        model.addAttribute("hebrew", hebrew);
+        //model.addAttribute(new Hebrew());
+
+        return "hebrew/edit";
+    }
+    @RequestMapping(value = "edit/{hebrewId}", method = RequestMethod.POST)
+    public String editHebrew(@RequestParam String Des, @PathVariable int hebrewId) {
+
+        Hebrew hebrewWord = hebrewDao.findOne(hebrewId);
+        hebrewWord.setDescription(Des);
+
+        System.out.println("*****" + Des + "******");
+        hebrewDao.save(hebrewWord);
+
+        return "redirect:/hebrew/view/" + hebrewWord.getId();
+    }
+
+    @RequestMapping(value = "add-item/{hebrewId}", method = RequestMethod.GET)
+    public String addItem(Model model, @PathVariable int hebrewId)
+    {
+        Hebrew hebrew = hebrewDao.findOne(hebrewId);
+
+        AddHebrewItemForm form = new AddHebrewItemForm(hebrew, englishDao.findAll());
+
+        model.addAttribute("title", "Add Item to word: " + hebrew.getWord());
+        model.addAttribute("form", form);
+
+        return "hebrew/add-item";
+    }
+    @RequestMapping(value = "add-item", method = RequestMethod.POST)
+    public String addItem(Model model, @ModelAttribute @Valid AddHebrewItemForm form, Errors errors)
+    {
+        English englishWord = englishDao.findOne(form.getEnglishId());
+        Hebrew hebrewWord = hebrewDao.findOne(form.getHebrewId());
+
+        for(Hebrew h : englishWord.getHebrew_words())
+        {
+            if(h.equals(hebrewWord))
+            {
+                return "redirect:/hebrew/view/" + hebrewWord.getId();
+            }
+        }
+        englishWord.addItem(hebrewWord);
+        englishDao.save(englishWord);
+
+        return "redirect:/hebrew/view/" + hebrewWord.getId();
+    }
+
+    @RequestMapping(value = "remove-item/{hebrewId}", method = RequestMethod.GET)
+    public String displayRemoveItem(Model model, @PathVariable int hebrewId)
+    {
+        Hebrew hebrew = hebrewDao.findOne(hebrewId);
+
+        AddHebrewItemForm form = new AddHebrewItemForm(hebrew, hebrew.getEnglish_words());
+
+        model.addAttribute("title", "Remove Item from word: " + hebrew.getWord());
+        model.addAttribute("form", form);
+        model.addAttribute("word_list", hebrew.getEnglish_words());
+
+        return "hebrew/remove-item";
+    }
+    @RequestMapping(value = "remove-item", method = RequestMethod.POST)
+    public String processRemoveItem(Model model, @ModelAttribute @Valid AddEnglishItemForm form, Errors errors)
+    {
+        Hebrew hebrewWord = hebrewDao.findOne(form.getHebrewId());
+        English englishWord = englishDao.findOne(form.getEnglishId());
+
+        englishWord.RemoveItem(hebrewWord);
+        englishDao.save(englishWord);
+
+        return "redirect:/hebrew/view/" + hebrewWord.getId();
+    }
 }

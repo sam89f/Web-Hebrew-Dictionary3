@@ -60,4 +60,13 @@ public class Hebrew {
     {
         english_words.add(item);
     }
+
+    public void RemoveItem(English item)
+    {
+        english_words.remove(item);
+    }
+
+    public List<English> getEnglish_words() {
+        return english_words;
+    }
 }

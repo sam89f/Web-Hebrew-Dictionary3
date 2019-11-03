@@ -129,20 +129,16 @@ public class EnglishController
 
         System.out.println("*****" +englishWord.getHebrew_words().size() + "*****");
 
+        for(Hebrew h : englishWord.getHebrew_words())
+        {
+            if(h.equals(hebrewWord))
+            {
+                return "redirect:/english/view/" + englishWord.getId();
+            }
+        }
         englishWord.addItem(hebrewWord);
         englishDao.save(englishWord);
 
-        System.out.println("*****" + englishWord.getWord() + "******");
-        System.out.println("*****" + hebrewWord.getWord() + "******");
-        System.out.println("*****" +englishWord.getHebrew_words().size() + "*****");
-        for(Hebrew w : englishWord.getHebrew_words())
-        {
-            System.out.println("+++++" + w.getWord() + "+++++");
-        }
-        for(Hebrew w : hebrewDao.findAll())
-        {
-            System.out.println("======" + w.getWord() + "======");
-        }
         return "redirect:/english/view/" + englishWord.getId();
     }
 

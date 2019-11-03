@@ -12,12 +12,12 @@
 
 <table class="table">
     <tr>
-        <th>Word</th>
+        <th>Hebrew Word(s)</th>
         <th>Description</th>
     </tr>
 
     <tr th:each="word : ${english.hebrew_words}">
-        <td th:text="${word.word}"></td>
+        <td><a th:href="'/hebrew/view/' + ${word.id}" th:text="${word.word}"></a></td>
         <td th:text="${word.description}"></td>
     </tr>
 </table>
