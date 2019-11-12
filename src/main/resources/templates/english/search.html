@@ -15,13 +15,24 @@
 
 
 <p th:if="${result}">
-<ul>
-    <li> <a th:href="'/english/view/' + ${result.id}" th:text="${result.word}"></a> </li>
-</ul>
+<table class="table">
+
+    <tr>
+        <th>Word</th>
+        <th>Definition</th>
+    </tr>
+
+    <tr>
+        <td><a th:href="'/english/view/' + ${result.id}" th:text="${result.word}"></a></td>
+        <td th:text="${result.definition}"></td>
+    </tr>
+
+</table>
+
 </p>
 <nav>
-    <a href="/english/add">Add Word</a> |
-    <a href="/english/remove">Remove Word</a>
+    <a href="/english/add">Add Hebrew Word</a> |
+    <a href="/english/remove">Remove Hebrew Word</a>
 </nav>
 
 </body>

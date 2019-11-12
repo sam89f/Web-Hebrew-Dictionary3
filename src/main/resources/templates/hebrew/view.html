@@ -12,15 +12,13 @@
 
 <table class="table">
     <tr>
-        <th th:text="${hebrew.word}"></th>
-        <th th:text="${hebrew.description}"></th>
-    </tr>
-    <tr>
         <td>English Word(s)</td>
+        <th>Definition</th>
     </tr>
 
     <tr th:each="word : ${hebrew.english_words}">
         <td><a th:href="'/english/view/' + ${word.id}" th:text="${word.word}"></a></td>
+        <td th:text="${word.definition}"></td>
     </tr>
 </table>
 <p th:unless="${hebrew.english_words.size()}"><i>No words yet</i></p>
@@ -28,6 +26,7 @@
 <nav>
     <a th:href="'/hebrew/edit/' + ${hebrew.id}">Edit Word</a> |
     <a th:href="'/hebrew/add-item/' + ${hebrew.id}">Add English Word</a> |
+    <a th:href="'/hebrew/add-new/' + ${hebrew.id}">Add New English Word</a> |
     <a th:href="'/hebrew/remove-item/' + ${hebrew.id}">Remove English Word</a>
 </nav>
 

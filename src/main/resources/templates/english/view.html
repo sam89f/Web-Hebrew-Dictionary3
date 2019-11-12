@@ -24,7 +24,9 @@
 <p th:unless="${english.hebrew_words.size()}"><i>No words yet</i></p>
 
 <nav>
+    <a th:href="'/english/edit/' + ${english.id}">Edit Word</a> |
     <a th:href="'/english/add-item/' + ${english.id}">Add Hebrew Word</a> |
+    <a th:href="'/english/add-new/' + ${english.id}">Add New Hebrew Word</a> |
     <a th:href="'/english/remove-item/' + ${english.id}">Remove Hebrew Word</a>
 </nav>
 

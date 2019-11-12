@@ -10,9 +10,19 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<ul th:each="word : ${english_words}">
-    <li> <a th:href="'/english/view/' + ${word.id}" th:text="${word.word}"></a> </li>
-</ul>
+<table class="table">
+
+    <tr>
+        <th>Word</th>
+        <th>Definition</th>
+    </tr>
+
+    <tr th:each="word : ${english_words}">
+        <td> <a th:href="'/english/view/' + ${word.id}" th:text="${word.word}"></a></td>
+        <td th:text="${word.definition}"></td>
+    </tr>
+
+</table>
 
 <nav>
     <a href="/english/add">Add Word</a> |

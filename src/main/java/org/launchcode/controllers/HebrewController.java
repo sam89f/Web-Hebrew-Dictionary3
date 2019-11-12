@@ -53,6 +53,15 @@ public class HebrewController {
             return "hebrew/add";
         }
 
+        for(Hebrew w : hebrewDao.findAll())
+        {
+            if(w.getWord().equals(newHebrew.getWord()))
+            {
+                model.addAttribute("title", "Add Word");
+                return "hebrew/add";
+            }
+        }
+
         hebrewDao.save(newHebrew);
         return "redirect:";
     }
@@ -84,7 +93,7 @@ public class HebrewController {
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
     public String displaySearchForm(Model model) {
-        model.addAttribute("title", "Search Word");
+        model.addAttribute("title", "Search Hebrew Word");
 
 
         return "hebrew/search";
@@ -92,7 +101,7 @@ public class HebrewController {
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String processSearchForm(Model model, @RequestParam String newHebrew) {
 
-        model.addAttribute("title", "Search Word");
+        model.addAttribute("title", "Search Hebrew Word");
         model.addAttribute("last", "newHebrew");
         System.out.println("*****" + newHebrew + "******");
 
@@ -120,7 +129,10 @@ public class HebrewController {
     public String viewHebrew(Model model, @PathVariable int hebrewId)
     {
         Hebrew hebrew = hebrewDao.findOne(hebrewId);
-        model.addAttribute("title", hebrew.getWord());
+
+        String title = hebrew.getWord() + ": " + hebrew.getDescription();
+
+        model.addAttribute("title", title);
         model.addAttribute("hebrew", hebrew);
 
         return "hebrew/view";
@@ -146,6 +158,43 @@ public class HebrewController {
         System.out.println("*****" + Des + "******");
         hebrewDao.save(hebrewWord);
 
+        return "redirect:/hebrew/view/" + hebrewWord.getId();
+    }
+
+    @RequestMapping(value = "add-new/{hebrewId}", method = RequestMethod.GET)
+    public String addNew(Model model, @PathVariable int hebrewId)
+    {
+        Hebrew hebrew = hebrewDao.findOne(hebrewId);
+
+        model.addAttribute("title", hebrew.getWord());
+        model.addAttribute("hebrew", hebrew);
+
+        return "hebrew/add-new";
+    }
+    @RequestMapping(value = "add-new/{hebrewId}", method = RequestMethod.POST)
+    public String addNew(@RequestParam String word,@RequestParam String definition, @PathVariable int hebrewId) {
+
+        Hebrew hebrewWord = hebrewDao.findOne(hebrewId);
+        English newWord = new English(word, definition);
+
+        System.out.println("*****" + word + "******");
+
+        for(English w : englishDao.findAll())
+        {
+            if(word.equals(w.getWord()))
+            {
+                return "redirect:/hebrew/view/" + hebrewWord.getId();
+            }
+        }
+        englishDao.save(newWord);
+        for(English en : englishDao.findAll())
+        {
+            if(word.equals(en.getWord()))
+            {
+                hebrewWord.addItem(en);
+                hebrewDao.save(hebrewWord);
+            }
+        }
         return "redirect:/hebrew/view/" + hebrewWord.getId();
     }
 

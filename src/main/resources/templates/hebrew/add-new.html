@@ -6,18 +6,15 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<form method="post" style="max-width:600px;" th:object="${english}">
+<form method="post">
     <div class="form-group">
-        <label th:for="word">Word</label>
-        <input class="form-control" th:field="*{word}" />
-        <span th:errors="*{word}" class="error"></span>
+        <label th:for="eWord">English Word</label>
+        <input class="form-control" type="text" name="word" />
     </div>
     <div class="form-group">
         <label th:for="definition">Definition</label>
-        <input class="form-control" th:field="*{definition}" />
-        <span th:errors="*{definition}" class="error"></span>
+        <input class="form-control" type="text" name="definition" />
     </div>
-
     <input type="submit" value="Add Word" />
 </form>
 

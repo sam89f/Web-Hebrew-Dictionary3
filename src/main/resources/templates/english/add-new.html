@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<form method="post">
+    <div class="form-group">
+        <label th:for="eWord">Hebrew Word</label>
+        <input class="form-control" type="text" name="word" />
+    </div>
+    <div class="form-group">
+        <label th:for="description">Description</label>
+        <input class="form-control" type="text" name="description" />
+    </div>
+    <input type="submit" value="Add Word" />
+</form>
+
+</body>
+</html>

@@ -50,6 +50,14 @@ public class EnglishController
             model.addAttribute("title", "Add Word");
             return "english/add";
         }
+        for(English w: englishDao.findAll())
+        {
+            if(w.getWord().equals(english.getWord()))
+            {
+                model.addAttribute("title", "Add Word");
+                return "english/add";
+            }
+        }
 
         englishDao.save(english);
         return "redirect:view/" + english.getId();
@@ -73,7 +81,7 @@ public class EnglishController
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
     public String displaySearchForm(Model model) {
-        model.addAttribute("title", "Search Word");
+        model.addAttribute("title", "Search English Word");
 
 
         return "english/search";
@@ -81,7 +89,7 @@ public class EnglishController
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String processSearchForm(Model model, @RequestParam String newEnglish) {
 
-        model.addAttribute("title", "Search Word");
+        model.addAttribute("title", "Search English Word");
         model.addAttribute("last", "newEnglish");
         System.out.println("*****" + newEnglish + "******");
 
@@ -102,11 +110,70 @@ public class EnglishController
     public String viewEnglish(Model model, @PathVariable int englishId)
     {
         English english = englishDao.findOne(englishId);
+        String title = english.getWord() + ": " + english.getDefinition();
+        model.addAttribute("title", title);
+        model.addAttribute("english", english);
+
+        return "english/view";
+    }
+
+    @RequestMapping(value = "edit/{englishId}", method = RequestMethod.GET)
+    public String editEnglish(Model model, @PathVariable int englishId)
+    {
+        English english = englishDao.findOne(englishId);
 
         model.addAttribute("title", english.getWord());
         model.addAttribute("english", english);
 
-        return "english/view";
+        return "english/edit";
+    }
+    @RequestMapping(value = "edit/{englishId}", method = RequestMethod.POST)
+    public String editEnglish(@RequestParam String Def, @PathVariable int englishId) {
+
+        English englishWord = englishDao.findOne(englishId);
+        englishWord.setDefinition(Def);
+
+        System.out.println("*****" + Def + "******");
+        englishDao.save(englishWord);
+
+        return "redirect:/english/view/" + englishWord.getId();
+    }
+
+    @RequestMapping(value = "add-new/{englishId}", method = RequestMethod.GET)
+    public String addNew(Model model, @PathVariable int englishId)
+    {
+        English english = englishDao.findOne(englishId);
+
+        model.addAttribute("title", english.getWord());
+        model.addAttribute("english", english);
+
+        return "english/add-new";
+    }
+    @RequestMapping(value = "add-new/{englishId}", method = RequestMethod.POST)
+    public String addNew(@RequestParam String word, @RequestParam String description, @PathVariable int englishId) {
+
+        English englishWord = englishDao.findOne(englishId);
+        Hebrew newWord = new Hebrew(word, description);
+
+        System.out.println("*****" + word + "******");
+
+        for(Hebrew w : hebrewDao.findAll())
+        {
+            if(word.equals(w.getWord()))
+            {
+                return "redirect:/english/view/" + englishWord.getId();
+            }
+        }
+        hebrewDao.save(newWord);
+        for(Hebrew he : hebrewDao.findAll())
+        {
+            if(word.equals(he.getWord()))
+            {
+                englishWord.addItem(he);
+                englishDao.save(englishWord);
+            }
+        }
+        return "redirect:/english/view/" + englishWord.getId();
     }
 
     @RequestMapping(value = "add-item/{englishId}", method = RequestMethod.GET)

@@ -15,6 +15,10 @@ public class English {
     @Size(min=3, max=15)
     private String word;
 
+    @NotNull
+    @Size(min=1, message = "Definition must not be empty")
+    private String definition;
+
     @Id
     @GeneratedValue
     private int id;
@@ -24,8 +28,10 @@ public class English {
 
     public English() {}
 
-    public English(String word) {
+    public English(String word, String definition)
+    {
         this.word = word;
+        this.definition = definition;
     }
 
     public String getWord() {
@@ -42,6 +48,14 @@ public class English {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(String definition) {
+        this.definition = definition;
     }
 
     public List<Hebrew> getHebrew_words() {
