@@ -12,7 +12,7 @@ import java.util.List;
 public class English {
 
     @NotNull
-    @Size(min=3, max=15)
+    @Size(min=1, max=15)
     private String word;
 
     @NotNull
@@ -33,7 +33,12 @@ public class English {
         this.word = word;
         this.definition = definition;
     }
-
+    public English(String word, String definition, int id)
+    {
+        this.word = word;
+        this.definition = definition;
+        this.id = id;
+    }
     public String getWord() {
         return word;
     }

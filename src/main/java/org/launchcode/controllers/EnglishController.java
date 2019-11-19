@@ -13,6 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("english")
@@ -24,11 +26,36 @@ public class EnglishController
     @Autowired
     private EnglishDao englishDao;
 
+    public List<English> eSort(List<English> english_words)
+    {
+        for(int i = 0; i < english_words.size(); i++)
+        {
+            for(int j = 0; j < english_words.size() - 1; j++)
+            {
+                if(english_words.get(j).getWord().compareTo(english_words.get(j+1).getWord()) > 0)
+                {
+                    English temp = new English(english_words.get(j).getWord(), english_words.get(j).getDefinition(), english_words.get(j).getId());
+                    english_words.set(j, english_words.get(j+1));
+                    english_words.set(j+1, temp);
+                }
+            }
+        }
+
+        return english_words;
+    }
+
     // Request path: /english
     @RequestMapping(value = "")
     public String index(Model model) {
 
-        model.addAttribute("english_words", englishDao.findAll());
+        List<English> english_words = new ArrayList<English>(600);
+
+        for(English w : englishDao.findAll())
+        {
+            english_words.add(w);
+        }
+
+        model.addAttribute("english_words", eSort(english_words));
         model.addAttribute("title", "English Words");
 
         return "english/index";

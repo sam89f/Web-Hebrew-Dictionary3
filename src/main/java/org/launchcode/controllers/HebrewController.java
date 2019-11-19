@@ -13,6 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LaunchCode
@@ -27,11 +29,36 @@ public class HebrewController {
     @Autowired
     private HebrewDao hebrewDao;
 
+
+    public List<Hebrew> hSort(List<Hebrew> hebrew_words)
+    {
+        for(int i = 0; i < hebrew_words.size(); i++)
+        {
+            for(int j = 0; j < hebrew_words.size() - 1; j++)
+            {
+                if(hebrew_words.get(j).getWord().compareTo(hebrew_words.get(j+1).getWord()) > 0)
+                {
+                    Hebrew temp = new Hebrew(hebrew_words.get(j).getWord(), hebrew_words.get(j).getDescription(), hebrew_words.get(j).getId());
+                    hebrew_words.set(j, hebrew_words.get(j+1));
+                    hebrew_words.set(j+1, temp);
+                }
+            }
+        }
+
+        return hebrew_words;
+    }
+
     // Request path: /hebrew
     @RequestMapping(value = "")
     public String index(Model model) {
 
-        model.addAttribute("hebrew_words", hebrewDao.findAll());
+        List<Hebrew> hebrew_words = new ArrayList<Hebrew>(600);
+
+        for(Hebrew w : hebrewDao.findAll())
+        {
+            hebrew_words.add(w);
+        }
+        model.addAttribute("hebrew_words", hSort(hebrew_words));
         model.addAttribute("title", "Hebrew Words");
 
         return "hebrew/index";

@@ -19,7 +19,7 @@ public class Hebrew {
     private int id;
 
     @NotNull
-    @Size(min=3, max=15)
+    @Size(min=1, max=15)
     private String word;
 
     @NotNull
@@ -33,7 +33,11 @@ public class Hebrew {
         this.word = word;
         this.description = description;
     }
-
+    public Hebrew(String word, String description, int id) {
+        this.word = word;
+        this.description = description;
+        this.id = id;
+    }
     public Hebrew() { }
 
     public int getId() {
