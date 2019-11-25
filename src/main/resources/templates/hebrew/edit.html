@@ -9,7 +9,7 @@
 <form method="post">
     <div class="form-group">
         <label th:for="description">Description</label>
-        <input class="form-control" type="text" name="Des" />
+        <input class="form-control" type="text" th:value ="${hebrew.description}" name="Des" />
     </div>
 
     <input type="submit" value="Edit Word" />
